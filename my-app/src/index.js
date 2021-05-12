@@ -3,41 +3,51 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          value: null,
+        };
+      }
     render() {
       return (
-        <button className="square">
-          {/* TODO */}
+          
+        <button className="square" onClick={() => this.setState({value: 'X'})}>
+          {this.state.value}
         </button>
       );
     }
   }
   
   class Board extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(this.props.n)
+        this.state = {
+          squares: Array(this.props.n).fill(null),
+        };
+      }
     renderSquare(i) {
-      return <Square />;
+      return(
+        <Square value={this.state.squares[i]} />
+      );
     }
   
     render() {
-      const status = 'Next player: X';
-  
+        const status = 'Next player: ' + this.props.n;
+        var list = []
+        for(var r = 0; r < this.props.n; r++){
+            var next = []
+            next.push(<div className="board-row"></div>)
+            for(var c = 0; c < this.props.n; c++){
+                next.push(this.renderSquare(r + c * r))
+            }
+            list.push(next)
+        }
       return (
         <div>
           <div className="status">{status}</div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
+            {list}
         </div>
       );
     }
@@ -48,7 +58,7 @@ class Square extends React.Component {
       return (
         <div className="game">
           <div className="game-board">
-            <Board />
+            <Board n={4}/>
           </div>
           <div className="game-info">
             <div>{/* status */}</div>
